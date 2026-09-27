@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SARING v1.0.0</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e6e9ef;--accent:#2563eb;--danger:#dc2626;--shadow:0 6px 22px rgba(16,24,40,.06)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text)}
+.wrap{max-width:1180px;margin:auto;padding:22px}.top{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:18px}.title h1{font-size:25px;margin:0 0 4px}.title p{margin:0;color:var(--muted);font-size:13px}.title .tagline{font-weight:700;color:#172033;margin-bottom:2px}.badge{font-size:12px;background:#eef4ff;color:#2457b8;padding:7px 10px;border-radius:999px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px;margin-bottom:16px}
+.form{display:grid;grid-template-columns:repeat(4,1fr) auto;gap:12px;align-items:end}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}.field input{width:100%;padding:11px;border:1px solid #d7dce5;border-radius:10px;font-size:14px}.btn{border:0;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer;background:#edf1f7;color:#253047}.btn.primary{background:var(--accent);color:#fff}.btn.danger{color:var(--danger);background:#fff1f1}.btn.small{padding:7px 9px;font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat .label{font-size:12px;color:var(--muted);font-weight:700}.stat .value{font-size:27px;font-weight:800;margin:5px 0}.stat .sub{font-size:12px;color:var(--muted)}.stat .sub.rateDown{color:#176b3a}.stat .sub.rateUp{color:#b42318}.stat .sub.rateNeutral{color:#475569}.chartHead{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.tabs,.ranges{display:flex;gap:6px;flex-wrap:wrap}.tab,.range{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:12px;font-weight:700}.tab.active,.range.active{background:#172033;color:#fff;border-color:#172033}.chart{height:330px;position:relative;margin-top:10px}.chartTooltip{position:absolute;z-index:10;display:none;min-width:210px;max-width:260px;background:#171717;color:#fff;border-radius:9px;padding:10px 12px;box-shadow:0 5px 18px rgba(0,0,0,.28);font-size:12px;line-height:1.45;pointer-events:none}.chartTooltip .ttDate{font-weight:700;margin-bottom:3px}.chartTooltip .ttTrend{color:#9f1111}.chartTooltip .ttActual{color:#ddd}.chartTooltip .ttProj{color:#aaa}.chart svg{width:100%;height:100%;overflow:visible;touch-action:pan-y}.chartGuide{pointer-events:none}.chartSelected{pointer-events:none}.chartHit{cursor:pointer}.chartHoverZone{fill:transparent;pointer-events:all}.chartHoverZone:focus{outline:none}.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:6px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#2563eb;margin-right:5px}.dot.trend{background:#111827}.tableWrap{overflow:auto}.table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px}.table th,.table td{border-bottom:1px solid var(--line);padding:10px 8px;text-align:right;white-space:nowrap}.table th:first-child,.table td:first-child{text-align:left}.table thead tr:first-child th{background:#f8fafc;font-weight:800}.table thead tr:nth-child(2) th{font-size:11px;color:var(--muted);background:#fff}.trendv{font-weight:700}.actual{color:#172033}.note{font-size:11px;color:var(--muted);line-height:1.5}.empty{text-align:center;color:var(--muted);padding:28px}.csv{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.hidden{display:none!important}.mobileMeasurements{display:none}.measureTabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}.measureTab{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 14px;cursor:pointer;font-size:12px;font-weight:800}.measureTab.active{background:#172033;color:#fff;border-color:#172033}.measureTableWrap{margin-top:12px;overflow:hidden}.measureTable{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}.measureTable th,.measureTable td{border-bottom:1px solid var(--line);padding:11px 10px;text-align:right}.measureTable th:first-child,.measureTable td:first-child{text-align:left}.measureTable thead th{background:#f8fafc;font-weight:800}.measureTable thead tr:nth-child(2) th{font-size:11px;color:var(--muted);background:#fff}.measureActions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.goalDashboard{border:1px solid #dbe6ff;background:linear-gradient(180deg,#f8fbff 0%,#fff 100%)}.goalSummary{font-weight:800;font-size:16px;text-align:right}.goalbar{height:10px;background:#e9eef6;border-radius:999px;overflow:hidden;margin:14px 0 9px}.goalfill{height:100%;background:#2563eb;border-radius:999px;transition:width .25s ease}.goalmeta{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.stat{margin:0}.stats + .stats{margin-top:12px}
+@media(max-width:800px){.modal{padding:10px;align-items:stretch}.modalCard{width:100%;height:calc(100dvh - 20px);max-height:none;border-radius:18px;padding:14px}.wrap{padding:12px}.card{padding:14px;margin-bottom:12px}.top{align-items:flex-start}.title h1{font-size:22px}.title p{font-size:12px}.badge{font-size:10px}.form{grid-template-columns:1fr 1fr;gap:10px}.form .actions{grid-column:1/-1}.field input{font-size:16px;padding:12px}.stats{grid-template-columns:1fr 1fr;gap:10px}.stats .stat{padding:13px}.stats .stat:nth-child(3){grid-column:1/-1}.stat .value{font-size:22px}.stat .sub{font-size:11px}.chartHead{align-items:flex-start}.tabs,.ranges{width:100%}.tab,.range{flex:1;text-align:center;padding:9px 7px}.chart{height:290px}.legend{gap:10px;font-size:11px}.goalSummary{text-align:left;font-size:15px;margin-top:6px}.goalmeta{gap:8px 16px}.measureTableWrap{overflow:hidden}.measureTable th,.measureTable td{padding:10px 7px}.measureTabs{width:100%}.measureTab{flex:1;text-align:center;padding:9px 7px}.measureFooter{margin-top:10px}.modalCard{padding:14px}.editHistory{gap:6px}.editHistoryRow{padding:11px 4px}.editHistoryRow .historyVals{font-size:12px}.editSelected{padding-top:10px}}
+
+.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:18px}.modalBackdrop{position:absolute;inset:0;background:rgba(15,23,42,.48)}.modalCard{position:relative;width:min(680px,100%);height:min(82dvh,760px);max-height:82dvh;display:flex;flex-direction:column;overflow:hidden;background:#fff;border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.25);padding:18px}.modalHead{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px;flex:0 0 auto}.olderList{border-top:1px solid var(--line);overflow-y:auto;min-height:0;flex:1;padding-right:3px}.olderRow{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:12px 4px;border-bottom:1px solid var(--line)}.olderDate{font-weight:700}.olderValues{color:var(--muted);font-size:12px}.editHistory{border-top:1px solid var(--line);overflow-y:auto;overscroll-behavior:contain;min-height:0;flex:1;padding:0 3px 4px 0;-webkit-overflow-scrolling:touch}.editHistoryRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 6px;border-bottom:1px solid var(--line);cursor:pointer;border:1.5px solid transparent;border-radius:10px}.editHistoryRow.selected{background:#eef4ff;border-color:#2563eb;box-shadow:0 0 0 2px rgba(37,99,235,.08)}.editSelectMark{width:22px;height:22px;border-radius:50%;border:1.5px solid #cbd5e1;display:grid;place-items:center;color:transparent;font-size:13px;font-weight:800;flex:0 0 auto}.editHistoryRow.selected .editSelectMark{background:#2563eb;border-color:#2563eb;color:#fff}.editSelected{flex:0 0 auto;position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);padding-top:12px;display:flex;justify-content:flex-end}.btn.danger{background:#b42318;color:#fff;border-color:#b42318}.btn.danger:disabled{opacity:.45;cursor:not-allowed}.editSelected{gap:8px}.measureFooter{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap} .estimatedRow{background:#fafbfc}.estimatedValue{color:#7b8490;font-style:italic}.estimatedValue small{font-size:10px;color:#8b95a1}.estimateBadge{font-size:9px;color:#7b8490;border:1px solid #d6dbe2;border-radius:999px;padding:2px 5px;vertical-align:middle}
+.appFooter{padding:16px 4px 28px;text-align:center;color:var(--muted);font-size:12px}.appFooter span{margin-left:6px;font-weight:700;color:#64748b}
+
+.addActions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:stretch}
+.addActions .btn,.addActions label.btn{height:44px;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;line-height:1}
+.currentStat{min-width:0}
+.currentStat .value{white-space:nowrap}
+.currentStat .sub{white-space:nowrap}
+.periodCaption{font-size:10px;color:var(--muted);margin-top:10px;margin-bottom:2px}.periodGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.periodGrid>div{min-width:0}
+.periodGrid span{display:block;font-size:10px;color:var(--muted);margin-bottom:2px;white-space:nowrap}
+.periodValue{font-size:14px;font-weight:800;white-space:nowrap}
+.changeTop{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.changeRate{font-size:14px;font-weight:800;white-space:nowrap}.changeLabel{text-transform:none}.rateSentenceWrap{margin-top:5px;line-height:1.4}.rateSentence{font-size:14px;font-weight:600}.rateSentence.good{color:#176b3a}.rateSentence.bad{color:#b42318}.rateSentence.neutral{color:#475569}
+.addActions .btn{white-space:nowrap}
+.measurementModal .modalCard{height:auto;max-height:90dvh}.measurementModal .form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.measurementModal .actions{grid-column:1/-1;justify-content:flex-end}.changeCard{margin-top:12px}.changeGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}.changeItem{padding:12px;border:1px solid var(--line);border-radius:10px;background:#fafbfc}.rateDown{color:#176b3a}.rateUp{color:#b42318}.rateNeutral{color:#475569}.goalSchedule{font-size:12px;font-weight:700;margin-top:10px}.goalSchedule.good{color:#176b3a}.goalSchedule.bad{color:#b42318}.goalSchedule.neutral{color:#475569}.calorieEstimate{font-size:11px;color:#667085;margin-top:5px}.calorieAdjustment{font-size:11px;color:#667085;margin-top:4px}.setting select{width:100%;box-sizing:border-box;padding:11px;border:1px solid #d7dce5;border-radius:10px;font-size:14px;background:#fff}.settingToggle{display:flex;align-items:center;gap:8px}.settingToggle .btn{min-width:64px}
+@media(max-width:800px){
+  .addActions{width:100%;justify-content:flex-start;align-items:stretch}
+  .addActions .btn,.addActions label.btn{height:40px;padding:8px 10px;font-size:11px}
+  .currentStat .value{font-size:21px}
+  .currentStat .sub{font-size:10px}
+  .changeGrid{grid-template-columns:1fr}
+  .changeItem{padding:10px}
+  .changeRate{font-size:13px}
+  .rateSentence{font-size:13px}
+  .periodGrid{gap:6px}
+  .periodValue{font-size:13px}
+  .periodCaption{font-size:9px}.periodGrid span{font-size:9px}
+  .measurementModal .modalCard{height:auto;max-height:calc(100dvh - 20px);overflow-y:auto}
+  .measurementModal .form{grid-template-columns:1fr}
+  .measurementModal .actions{grid-column:auto}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="title"><h1>SARING</h1><p class="tagline">Track the trend, not the noise.</p><p>Weight • Fat % • Muscle</p></div>
+    <span class="badge">v1.0.0</span>
+  </div>
+
+  <div class="card">
+    <div class="chartHead">
+      <div><strong>Measurements</strong><div class="note">Add a new reading or edit your measurement history.</div></div>
+      <div class="addActions">
+        <button class="btn primary" id="addMeasurementBtn">+ Add measurement</button>
+        <button class="btn" id="editLogTop">Edit log</button>
+        <button class="btn small" id="export">Export CSV</button>
+        <label class="btn small">Import CSV<input id="import" class="hidden" type="file" accept=".csv,text/csv"></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal hidden measurementModal" id="measurementModal">
+    <div class="modalBackdrop" id="measurementBackdrop"></div>
+    <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="measurementTitle">
+      <div class="modalHead"><div><strong id="measurementTitle">Add measurement</strong><div class="note">Enter any measurements you took that day.</div></div><button class="btn small" id="closeMeasurement">Close</button></div>
+      <div class="form">
+        <div class="field"><label>Date</label><input id="date" type="date"></div>
+        <div class="field"><label>Weight (kg)</label><input id="weight" type="number" step="0.01" placeholder="e.g. 93.70"></div>
+        <div class="field"><label>Body fat (%)</label><input id="fat" type="number" step="0.1" placeholder="e.g. 29.5"></div>
+        <div class="field"><label>Skeletal muscle (kg)</label><input id="muscle" type="number" step="0.01" placeholder="e.g. 33.00"></div>
+        <div class="actions"><button class="btn" id="cancel">Cancel</button><button class="btn primary" id="save">Add measurement</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card goalDashboard">
+    <div class="chartHead">
+      <div><strong>Goal Progress</strong><div class="note">Progress toward your target weight and planned pace.</div></div>
+      <div id="goalSummary" class="goalSummary">Set a target weight to see progress.</div>
+    </div>
+    <div class="goalbar"><div id="goalFill" class="goalfill" style="width:0%"></div></div>
+    <div id="goalMeta" class="goalmeta"></div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+  <div class="card changeCard" id="changes"></div>
+
+  <div class="card">
+    <div class="chartHead">
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-metric="weight">Weight</button>
+        <button class="tab" data-metric="fat">Body fat</button>
+        <button class="tab" data-metric="muscle">Skeletal muscle</button>
+      </div>
+      <div class="ranges" id="ranges">
+        <button class="range active" data-days="30">30D</button><button class="range" data-days="60">60D</button>
+        <button class="range" data-days="180">180D</button><button class="range" data-days="365">1Y</button><button class="range" data-days="all">All</button>
+      </div>
+    </div>
+    <div class="chart"><svg id="svg" viewBox="0 0 1000 330" preserveAspectRatio="none"></svg><div id="chartTooltip" class="chartTooltip"></div></div>
+    <div class="note" id="chartNote"></div>
+    <div class="legend" id="legend"><span>◇ Scale Reading</span><span style="color:#B42318">━ Weight Trend</span><span style="color:#94A3B8">┈ Projected Weight</span></div>
+  </div>
+
+  <div class="card">
+    <div class="csv">
+      <div><strong>Measurements</strong><div class="note">Latest 14 real measurements are shown, with missing days estimated between surrounding entries.</div></div>
+    </div>
+    <div class="measureTabs" id="measureTabs">
+      <button class="measureTab active" data-measure="weight">Weight</button>
+      <button class="measureTab" data-measure="fat">Body fat %</button>
+      <button class="measureTab" data-measure="muscle">Skeletal muscle</button>
+    </div>
+    <div class="measureTableWrap">
+      <table class="measureTable">
+        <thead><tr><th>Date</th><th id="measureMetricHead" colspan="2">Weight (kg)</th></tr><tr><th></th><th>Actual</th><th>Trend</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="measureFooter" id="measureFooter"></div>
+  </div>
+
+  <div class="modal hidden" id="olderModal">
+    <div class="modalBackdrop" id="olderBackdrop"></div>
+    <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="olderTitle">
+      <div class="modalHead"><div><strong id="olderTitle">Edit measurement log</strong><div class="note">Choose a date from your history, then edit it on this page.</div></div><button class="btn small" id="closeOlder">Close</button></div>
+      <div id="olderList" class="editHistory"></div>
+      <div class="editSelected"><button class="btn danger" id="deleteSelectedBtn" disabled>Delete selected</button><button class="btn primary" id="editSelectedBtn" disabled>Edit selected</button></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="chartHead">
+      <div><strong>Progress & Goal Settings</strong><div class="note">Choose when your progress starts and set a target weight.</div></div>
+    </div>
+    <div class="settingsGrid" style="margin-top:14px">
+      <div class="setting">
+        <label>Start date</label>
+        <input id="startDate" type="date">
+        <div class="note" style="margin-top:6px">Your weight/body-composition change is calculated from this date.</div>
+      </div>
+      <div class="setting">
+        <label>Earlier data</label>
+        <div class="toggle">
+          <button class="btn small" id="showEarlier">Show</button>
+          <button class="btn small" id="hideEarlier">Hide</button>
+        </div>
+        <div class="note" style="margin-top:6px">Hide removes data before the start date from the table and charts. The selected start date still controls progress.</div>
+      </div>
+      <div class="setting">
+        <label>Target weight (kg)</label>
+        <input id="goalWeight" type="number" step="0.01" placeholder="e.g. 72.00">
+        <div class="note" style="margin-top:6px">Used to show progress toward your target weight.</div>
+      </div>
+      <div class="setting">
+        <label>Planned rate of weight change</label>
+        <select id="plannedRate">
+          <option value="0.25">0.25 kg/week</option>
+          <option value="0.5">0.50 kg/week</option>
+          <option value="0.75">0.75 kg/week</option>
+          <option value="1">1.00 kg/week</option>
+        </select>
+        <div class="note" style="margin-top:6px">Used to compare your current trend with your planned pace.</div>
+      </div>
+      <div class="setting">
+        <label>Estimated calorie surplus/deficit</label>
+        <div class="settingToggle">
+          <button class="btn small" id="calorieToggle" type="button">Off</button>
+        </div>
+        <div class="note" style="margin-top:6px">Estimate based on your recent weight-change rate. For reference only.</div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="card">
+    <strong>About SARING</strong>
+    <p class="note">
+      Personal body composition tracker using a trend methodology based on principles described in <i>The Hacker's Diet</i> by John Walker.
+      Data is stored locally in your browser. No cloud sync is used.
+    </p>
+  </div>
+
+  <div class="appFooter">
+    SARING <span>v1.0.0</span><br>
+    Personal body composition tracker.
+  </div>
+</div>
+
+<script>
+const KEY="bodyTrendTracker_v6";
+let rows=JSON.parse(localStorage.getItem(KEY)||"[]");
+let editing=null, metric="weight", days=30;
+const defaultSettings={startDate:"",goalWeight:null,showEarlier:true,plannedRate:0.5,showCalories:false};
+let settings=Object.assign({},defaultSettings,JSON.parse(localStorage.getItem("bodyTrendTrackerSettings_v8")||"{}"));
+
+const $=id=>document.getElementById(id);
+function saveStore(){localStorage.setItem(KEY,JSON.stringify(rows));}
+function saveSettings(){localStorage.setItem("bodyTrendTrackerSettings_v8",JSON.stringify(settings));}
+function rowsFromStart(){
+  if(!settings.startDate)return rows;
+  if(settings.showEarlier)return rows;
+  return rows.filter(r=>r.date>=settings.startDate);
+}
+function progressRows(){
+  if(!settings.startDate)return rows;
+  return rows.filter(r=>r.date>=settings.startDate);
+}
+
+function num(v){return v===""||v==null||isNaN(Number(v))?null:Number(v)}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function dateObj(s){return new Date(s+"T00:00:00")}
+function fmt(v,d=2){return v==null?"—":Number(v).toFixed(d)}
+function daysBetween(a,b){return Math.round((dateObj(b)-dateObj(a))/86400000)}
+function addDays(s,n){const d=dateObj(s);d.setDate(d.getDate()+n);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+
+function interpolated(metric){
+  // One real reading per date. Real readings always take precedence over estimates.
+  const byDate=new Map();
+  rows.filter(r=>r[metric]!=null).forEach(r=>byDate.set(r.date,r));
+  const real=[...byDate.values()].sort((a,b)=>a.date.localeCompare(b.date));
+  if(real.length<2)return real.map(r=>({date:r.date,calc:r[metric],estimated:false}));
+  const out=[];
+  for(let i=0;i<real.length-1;i++){
+    const a=real[i],b=real[i+1], gap=daysBetween(a.date,b.date);
+    out.push({date:a.date,calc:a[metric],estimated:false});
+    // Only fill dates strictly between two real observations. Never replace a real day.
+    for(let k=1;k<gap;k++){
+      const d=addDays(a.date,k);
+      const t=k/gap;
+      out.push({date:d,calc:a[metric]+(b[metric]-a[metric])*t,estimated:true});
+    }
+  }
+  out.push({date:real.at(-1).date,calc:real.at(-1)[metric],estimated:false});
+  return out;
+}
+function dailyMetric(metric){
+  const tm=trendMap(metric);
+  return interpolated(metric).map(r=>({...r,trend:tm.get(r.date)}));
+}
+
+/* Smoothed trend calculation:
+   smoothing factor 0.1, with optional linear interpolation of missing days.
+   Trend is anchored at the first available real observation. */
+function trendMap(metric){
+  const series=interpolated(metric), m=new Map();
+  if(!series.length)return m;
+  let trend=series[0].calc;
+  m.set(series[0].date,trend);
+  for(let i=1;i<series.length;i++){
+    trend=0.1*series[i].calc+0.9*trend;
+    m.set(series[i].date,trend);
+  }
+  return m;
+}
+function calcAll(){
+  const tm={weight:trendMap("weight"),fat:trendMap("fat"),muscle:trendMap("muscle")};
+  return rows.map(r=>({...r,tw:tm.weight.get(r.date),tf:tm.fat.get(r.date),tm:tm.muscle.get(r.date)}));
+}
+function latest(){return [...rowsFromStart()].sort((a,b)=>b.date.localeCompare(a.date))[0]}
+
+function formatShortDate(d){return new Intl.DateTimeFormat(undefined,{day:"numeric",month:"short",year:"numeric"}).format(dateObj(d))}
+function formatMeasurementDate(d){
+  const parts=new Intl.DateTimeFormat("en-GB",{weekday:"short",day:"numeric",month:"short"}).formatToParts(dateObj(d));
+  const get=k=>parts.find(p=>p.type===k)?.value||"";
+  return `${get("weekday")} ${get("day")} ${get("month")}`;
+}
+function trendAt(metric,date){
+  return trendMap(metric).get(date);
+}
+function renderStats(){
+  const r=latest();
+  if(!r){
+    $("stats").innerHTML=`<div class="card stat" style="grid-column:1/-1"><div class="label">Dashboard</div><div class="value" style="font-size:18px">No visible measurements</div><div class="sub">Your data may be hidden by the Start date / Earlier data setting below. Choose <b>Show</b> or clear the Start date.</div></div>`;
+    $("changes").innerHTML="";
+    $("goalSummary").textContent="Set a target weight to see progress.";
+    $("goalFill").style.width="0%";
+    $("goalMeta").innerHTML="";
+    return;
+  }
+  const all=calcAll()
+    .filter(a=>!settings.startDate||a.date>=settings.startDate)
+    .sort((a,b)=>a.date.localeCompare(b.date));
+
+  const metricInfo=[
+    {label:"Current weight",key:"tw",actualKey:"weight",unit:"kg",dec:2,direction:"lower"},
+    {label:"Current body fat",key:"tf",actualKey:"fat",unit:"%",dec:1,direction:"lower"},
+    {label:"Current skeletal muscle",key:"tm",actualKey:"muscle",unit:"kg",dec:2,direction:"higher"}
+  ];
+
+  const latestMetric=(key)=>[...all].reverse().find(a=>a[key]!=null);
+  const firstMetric=(key)=>all.find(a=>a[key]!=null);
+
+  const fmtSigned=(v,dec,unit)=>{
+    if(v==null)return "—";
+    const n=Math.abs(v)<0.0005?0:v;
+    return `${n>0?"↑ ":n<0?"↓ ":""}${Math.abs(n).toFixed(dec)} ${unit}`;
+  };
+
+  const changeClass=(v,direction)=>{
+    if(v==null||Math.abs(v)<0.0005)return "rateNeutral";
+    const good=direction==="lower"?v<0:v>0;
+    return good?"rateDown":"rateUp";
+  };
+
+  const metricCurrent=metricInfo.map(m=>{
+    const cur=latestMetric(m.key), first=firstMetric(m.key);
+    const delta=cur&&first?cur[m.key]-first[m.key]:null;
+    return {...m,cur,first,delta};
+  });
+
+  $("stats").innerHTML=metricCurrent.map(m=>`
+    <div class="card stat currentStat">
+      <div class="label">${m.label}</div>
+      <div class="value">${fmt(m.cur?.[m.key],m.dec)} ${m.cur?.[m.key]==null?"":m.unit}</div>
+      <div class="sub ${changeClass(m.delta,m.direction)}">${fmtSigned(m.delta,m.dec,m.unit)} since ${m.first?.date?formatMeasurementDate(m.first.date):"start"}</div>
+    </div>
+  `).join("");
+
+  // Recent average rate: least-squares slope of the latest 14 daily trend values.
+  // This describes the current direction rather than averaging the entire tracking period.
+  const recentRatePerWeek=(metric,currentDate)=>{
+    const daily=dailyMetric(metric).filter(v=>v.date<=currentDate && v.trend!=null);
+    const recent=daily.slice(-14);
+    if(recent.length<2)return null;
+    const ys=recent.map(v=>v.trend);
+    const xs=recent.map((_,i)=>i);
+    const xBar=xs.reduce((a,b)=>a+b,0)/xs.length;
+    const yBar=ys.reduce((a,b)=>a+b,0)/ys.length;
+    const denom=xs.reduce((sum,x)=>sum+(x-xBar)**2,0);
+    if(denom===0)return null;
+    const slope=xs.reduce((sum,x,i)=>sum+(x-xBar)*(ys[i]-yBar),0)/denom;
+    return slope*7;
+  };
+
+  const trendOnOrBefore=(metric,date)=>{
+    const d=dailyMetric(metric).filter(v=>v.date<=date);
+    return d.length?d.at(-1):null;
+  };
+
+  const periodDelta=(m,daysAgo)=>{
+    if(!m.cur)return null;
+    const thresholds={1:2,7:4,14:9};
+    const need=thresholds[daysAgo];
+    if(need){
+      const end=m.cur.date, start=addDays(end,-daysAgo);
+      const actualCount=rows.filter(r=>r.date>=start&&r.date<=end&&r[m.actualKey]!=null).length;
+      if(actualCount<need)return null;
+    }
+    const target=addDays(m.cur.date,-daysAgo);
+    const past=trendOnOrBefore(m.actualKey,target);
+    return past?m.cur[m.key]-past.trend:null;
+  };
+
+  const changeCell=(v,m,dec)=>`<span class="periodValue ${changeClass(v,m.direction)}">${fmtSigned(v,dec,m.unit)}</span>`;
+
+  const calorieEstimate=(rate)=>{
+    if(rate==null)return "";
+    const kcalDay=Math.abs(rate)*7700/7;
+    if(kcalDay<5)return `<div class="calorieEstimate">Estimated calorie balance: ~0 kcal/day</div>`;
+    const kind=rate<0?"deficit":"surplus";
+    return `<div class="calorieEstimate">Estimated calorie ${kind}: ~${Math.round(kcalDay/5)*5} kcal/day</div>`;
+  };
+
+  // Match TrendWeight's planned-vs-actual calorie adjustment.
+  // Planned/actual weight-change rates are converted using 2.20462262 lb/kg × 3500 cal/lb.
+  const calorieAdjustment=(actualRate,plannedRate,lossDirection)=>{
+    if(actualRate==null||plannedRate==null||plannedRate<=0)return "";
+    const plannedSigned=lossDirection?-plannedRate:plannedRate;
+    const actualCaloriesPerDay=actualRate*2.20462262*3500/7;
+    const plannedCaloriesPerDay=plannedSigned*2.20462262*3500/7;
+    const diff=actualCaloriesPerDay-plannedCaloriesPerDay;
+    const rounded=Math.round(Math.abs(diff));
+    if(rounded<1){
+      const verb=lossDirection?`lose ${fmt(plannedRate,1)} kg/week`:`gain ${fmt(plannedRate,1)} kg/week`;
+      return `<div class="calorieAdjustment">You are on track to ${verb}.</div>`;
+    }
+    if(lossDirection){
+      return diff>0
+        ? `<div class="calorieAdjustment">You must cut <strong>${rounded} cal/day</strong> to lose ${fmt(plannedRate,1)} kg/week.</div>`
+        : `<div class="calorieAdjustment">You can eat <strong>${rounded} cal/day</strong> more and still lose ${fmt(plannedRate,1)} kg/week.</div>`;
+    }
+    return diff<0
+      ? `<div class="calorieAdjustment">You must eat <strong>${rounded} cal/day</strong> more to gain ${fmt(plannedRate,1)} kg/week.</div>`
+      : `<div class="calorieAdjustment">You can eat <strong>${rounded} cal/day</strong> less and still gain ${fmt(plannedRate,1)} kg/week.</div>`;
+  };
+
+  const rateSentence=(m,rate)=>{
+    if(rate==null)return `<span class="rateSentence neutral">Not enough data for a weekly rate.</span>`;
+    const abs=Math.abs(rate).toFixed(m.dec);
+    const unit=m.key==="tf"?"%":"kg";
+    const noun=m.label.replace("Current ","");
+    if(Math.abs(rate)<0.0005)return `<span class="rateSentence neutral">Your ${noun.toLowerCase()} is stable at ${abs} ${unit} per week</span>`;
+    const improving=(m.direction==="lower" ? rate<0 : rate>0);
+    const action=rate<0?"losing":"gaining";
+    const tone=improving?"good":"bad";
+    return `<span class="rateSentence ${tone}">You are ${action} <strong>${abs} ${unit} per week</strong></span>`;
+  };
+
+  const changeRows=metricCurrent.map(m=>{
+    const rate=recentRatePerWeek(m.actualKey,m.cur?.date);
+    const yesterday=periodDelta(m,1);
+    const week=periodDelta(m,7);
+    const twoWeeks=periodDelta(m,14);
+    return `<div class="changeItem">
+      <div class="changeLabel">${m.label.replace("Current ","")}</div>
+      <div class="rateSentenceWrap">${rateSentence(m,rate)}</div>
+      <div class="periodGrid">
+        <div><span>Since yesterday</span>${changeCell(yesterday,m,m.dec===1?1:2)}</div>
+        <div><span>Since last week</span>${changeCell(week,m,m.dec===1?1:2)}</div>
+        <div><span>Since two weeks ago</span>${changeCell(twoWeeks,m,m.dec===1?1:2)}</div>
+      </div>
+    </div>`;
+  }).join("");
+
+  $("changes").innerHTML=`
+    <div class="chartHead">
+      <div><strong>Change Over Time</strong><div class="note">Weekly rate uses the latest 14 days of your trend. Comparisons below also use trend values.</div></div>
+    </div>
+    <div class="changeGrid">${changeRows}</div>`;
+
+  const goalWeightRows=all.filter(r=>r.tw!=null);
+  const goalStart=goalWeightRows[0];
+  const goalCurrent=goalWeightRows.at(-1)?.tw;
+  const goal=settings.goalWeight;
+
+  const maintenanceRange=(goal)=>goal==null?null:{low:goal-1.134,high:goal+1.134};
+  const maintenanceState=(series,goal)=>{
+    if(goal==null||!series.length)return {active:false,range:null};
+    const range=maintenanceRange(goal);
+    let active=false;
+    let previous=series[0].tw;
+    for(let i=1;i<series.length;i++){
+      const cur=series[i].tw;
+      if(active && (cur<range.low||cur>range.high)) active=false;
+      const crossed=previous!=null&&cur!=null&&((previous<goal&&cur>=goal)||(previous>goal&&cur<=goal));
+      if(!active && crossed) active=true;
+      if(!active && cur===goal) active=true;
+      previous=cur;
+    }
+    if(active){
+      const last=series.at(-1).tw;
+      if(last<range.low||last>range.high) active=false;
+    }
+    return {active,range};
+  };
+
+  if(goal!=null && goalCurrent!=null && goalStart?.tw!=null){
+    const total=Math.abs(goalStart.tw-goal);
+    const done=total===0?1:Math.max(0,Math.min(1,Math.abs(goalStart.tw-goalCurrent)/total));
+    const remaining=goalCurrent-goal;
+    const ms=maintenanceState(goalWeightRows,goal);
+    const rate=settings.plannedRate||0.5;
+    const startDate=settings.startDate||goalStart.date;
+    const elapsed=Math.max(0,daysBetween(startDate,goalWeightRows.at(-1).date));
+    const lossDirection=goalStart.tw>goal;
+    const plannedTrend=goalStart.tw-(lossDirection?rate:-rate)*(elapsed/7);
+    const paceDiff=lossDirection?plannedTrend-goalCurrent:goalCurrent-plannedTrend;
+    const actualRate=recentRatePerWeek("weight",goalWeightRows.at(-1).date);
+    let scheduleHtml="";
+    if(ms.active){
+      scheduleHtml=`<div class="goalSchedule good">Maintenance · range ${fmt(ms.range.low,2)}–${fmt(ms.range.high,2)} kg</div>`;
+    }else if(Math.abs(goalStart.tw-goal)<0.001){
+      scheduleHtml=`<div class="goalSchedule neutral">Set a target below or above your starting trend to track a planned rate.</div>`;
+    }else{
+      const ahead=paceDiff>0.01, behind=paceDiff<-0.01;
+      const label=ahead?`Ahead of planned pace by ${fmt(Math.abs(paceDiff),2)} kg`:behind?`Behind planned pace by ${fmt(Math.abs(paceDiff),2)} kg`:`On planned pace`;
+      const tone=ahead?"good":behind?"bad":"neutral";
+      scheduleHtml=`<div class="goalSchedule ${tone}">${label} · planned ${fmt(rate,2)} kg/week</div>`;
+    }
+    const summary=ms.active?"Maintenance":(remaining===0?"Target reached.":`${remaining>0?fmt(remaining,2)+" kg remaining":fmt(Math.abs(remaining),2)+" kg below target"}`);
+    let calorieHtml="";
+    if(settings.showCalories && actualRate!=null){
+      const kcalDay=Math.abs(actualRate)*7700/7;
+      if(kcalDay>=5){
+        const kind=actualRate<0?"deficit":"surplus";
+        calorieHtml=`<span>Estimated calorie ${kind}: ~${Math.round(kcalDay/5)*5} kcal/day</span>`;
+      }
+      const adjustmentHtml=calorieAdjustment(actualRate,rate,lossDirection);
+      if(adjustmentHtml)calorieHtml+=adjustmentHtml;
+    }
+    $("goalSummary").innerHTML=summary+scheduleHtml;
+    $("goalFill").style.width=(done*100).toFixed(1)+"%";
+    $("goalMeta").innerHTML=`<span>Since: ${formatShortDate(startDate)}</span><span>Start: ${fmt(goalStart.tw,2)} kg</span><span>Target: ${fmt(goal,2)} kg</span><span>Planned: ${fmt(rate,2)} kg/week</span><span>${(done*100).toFixed(0)}% complete</span>${calorieHtml}`;
+  }else{
+    $("goalSummary").textContent="Set a target weight to see progress.";
+    $("goalFill").style.width="0%";
+    $("goalMeta").innerHTML="";
+  }
+}
+let measureMetric="weight";
+function renderTable(){
+  const all=calcAll().filter(r=>settings.showEarlier||!settings.startDate||r.date>=settings.startDate).sort((a,b)=>b.date.localeCompare(a.date));
+  const visible=all.slice(0,14);
+  const cfg={
+    weight:{label:"Weight (kg)",actualKey:"weight",trendKey:"tw",dec:2},
+    fat:{label:"Body fat (%)",actualKey:"fat",trendKey:"tf",dec:1},
+    muscle:{label:"Skeletal muscle (kg)",actualKey:"muscle",trendKey:"tm",dec:2}
+  }[measureMetric];
+  $("measureMetricHead").textContent=cfg.label;
+  const body=$("tbody");
+  const daily=dailyMetric(cfg.actualKey);
+  const dailyMap=new Map(daily.map(x=>[x.date,x]));
+  // Measurements should show the latest 14 REAL readings, while also displaying
+  // any interpolated missing days that fall between those readings.
+  const realDates=all.map(r=>r.date).filter(d=>dailyMap.get(d)?.estimated!==true);
+  const latestRealDates=realDates.slice(0,14);
+  const oldestShown=latestRealDates.at(-1);
+  const newestShown=latestRealDates[0];
+  const dates=(oldestShown&&newestShown)
+    ? Array.from({length:Math.max(1,daysBetween(oldestShown,newestShown)+1)},(_,i)=>addDays(oldestShown,i)).reverse()
+    : [];
+  const visibleDates=dates.filter(d=>{const r=dailyMap.get(d); return r && (settings.showEarlier||!settings.startDate||d>=settings.startDate);});
+  body.innerHTML=visibleDates.length?visibleDates.map(d=>{
+    const x=dailyMap.get(d), isEst=!!x?.estimated;
+    const reading=isEst?`<span class="estimatedValue">${fmt(x.calc,cfg.dec)}</span>`:`<span class="actual">${fmt(x.calc,cfg.dec)}</span>`;
+    return `<tr class="${isEst?'estimatedRow':''}"><td>${esc(formatMeasurementDate(d))}${isEst?` <span class="estimateBadge">Estimated</span>`:''}</td><td>${reading}</td><td class="trendv">${fmt(x.trend,cfg.dec)}</td></tr>`;
+  }).join(""):`<tr><td colspan="3" class="empty">${rows.length?"No visible measurements. Check Progress & Goal Settings below and choose Show / clear Start date.":"No measurements yet."}</td></tr>`;
+  const wrap=$("measureFooter");
+  if(wrap){
+    const estCount=visibleDates.filter(d=>dailyMap.get(d)?.estimated).length;
+    wrap.innerHTML=visibleDates.length?`<span class="note">Showing the latest ${visibleDates.length} days. <b>${estCount}</b> estimated day${estCount===1?'':'s'} are interpolated between surrounding entries.</span>`:`<span class="note">No measurements to display.</span>`;
+  }
+}
+function openOlder(){
+  const all=calcAll().sort((a,b)=>b.date.localeCompare(a.date));
+  const list=$("olderList"), editBtn=$("editSelectedBtn"), deleteBtn=$("deleteSelectedBtn");
+  const selected=new Set();
+  editBtn.disabled=true; deleteBtn.disabled=true;
+  list.innerHTML=all.length?all.map(r=>{
+    const vals=[];
+    if(r.weight!=null)vals.push(`Weight ${fmt(r.weight)} kg`);
+    if(r.fat!=null)vals.push(`Fat ${fmt(r.fat,1)}%`);
+    if(r.muscle!=null)vals.push(`Muscle ${fmt(r.muscle)} kg`);
+    return `<div class="editHistoryRow" data-date="${esc(r.date)}"><div><div class="olderDate">${esc(r.date)}</div><div class="historyVals">${vals.join(" • ")}</div></div><span class="editSelectMark">✓</span></div>`;
+  }).join(""):`<div class="empty">No measurements yet.</div>`;
+  const updateButtons=()=>{editBtn.disabled=selected.size!==1;deleteBtn.disabled=selected.size===0;deleteBtn.textContent=selected.size>0?`Delete selected (${selected.size})`:"Delete selected"};
+  list.querySelectorAll('.editHistoryRow').forEach(row=>row.addEventListener('click',()=>{
+    const d=row.dataset.date;
+    if(selected.has(d)){selected.delete(d);row.classList.remove('selected')}
+    else {selected.add(d);row.classList.add('selected')}
+    updateButtons();
+  }));
+  editBtn.onclick=()=>{if(selected.size===1){const d=[...selected][0];closeOlder();editRow(d)}};
+  deleteBtn.onclick=()=>{
+    if(!selected.size)return;
+    const dates=[...selected].sort();
+    if(confirm(`Delete ${dates.length} selected measurement${dates.length===1?'':'s'}? This cannot be undone.`)){
+      const remove=new Set(dates); rows=rows.filter(r=>!remove.has(r.date)); saveStore(); closeOlder(); render();
+    }
+  };
+  $("olderModal").classList.remove("hidden");
+}
+function closeOlder(){$("olderModal").classList.add("hidden")}
+$("closeOlder").onclick=closeOlder; $("olderBackdrop").onclick=closeOlder;
+$("editLogTop").onclick=openOlder;
+document.querySelectorAll(".measureTab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".measureTab").forEach(x=>x.classList.remove("active"));b.classList.add("active");measureMetric=b.dataset.measure;renderTable()});
+
+function renderChart(){
+  const labels={weight:"Weight (kg)",fat:"Body fat (%)",muscle:"Skeletal muscle (kg)"};
+  const name={weight:"Weight",fat:"Body fat",muscle:"Skeletal muscle"}[metric];
+  const unit=metric==="fat"?"%":"kg";
+  $("chartNote").textContent=labels[metric]+" • Actual vs Trend vs Projected";
+  const all=calcAll().filter(r=>(settings.showEarlier||!settings.startDate||r.date>=settings.startDate)&&r[metric]!=null).sort((a,b)=>a.date.localeCompare(b.date));
+  let data=all;
+  if(days!=="all"&&all.length){
+    const end=dateObj(all.at(-1).date), startD=new Date(end); startD.setDate(startD.getDate()-Number(days)+1);
+    data=all.filter(r=>dateObj(r.date)>=startD);
+  }
+  const svg=$("svg"), tooltip=$("chartTooltip"); tooltip.style.display="none";
+  if(!data.length){svg.innerHTML="";return}
+
+  const trendKey={weight:"tw",fat:"tf",muscle:"tm"}[metric];
+  const W=1000,H=330,p={l:55,r:20,t:18,b:35},iw=W-p.l-p.r,ih=H-p.t-p.b;
+  const firstDate=data[0].date,lastDate=data.at(-1).date;
+  const daily=dailyMetric(metric).filter(r=>dateObj(r.date)>=dateObj(firstDate)&&dateObj(r.date)<=dateObj(lastDate));
+  const trendSeries=daily.length?daily.map(r=>({date:r.date,trend:r.trend})):data.map(r=>({date:r.date,trend:r[trendKey]}));
+
+  let projection=[];
+  if(trendSeries.length>=3){
+    const n=Math.min(14,trendSeries.length), recent=trendSeries.slice(-n);
+    const xs=recent.map((r,i)=>i), ys=recent.map(r=>r.trend);
+    const xm=xs.reduce((a,b)=>a+b,0)/n, ym=ys.reduce((a,b)=>a+b,0)/n;
+    let nume=0,dene=0; xs.forEach((x,i)=>{nume+=(x-xm)*(ys[i]-ym);dene+=(x-xm)*(x-xm)});
+    const slope=dene?nume/dene:0,last=trendSeries.at(-1);
+    projection=[{date:last.date,value:last.trend}];
+    for(let i=1;i<=7;i++)projection.push({date:addDays(last.date,i),value:last.trend+slope*i});
+  }
+
+  const actualVals=daily.map(r=>r.calc).filter(v=>v!=null), trendVals=trendSeries.map(r=>r.trend).filter(v=>v!=null);
+  const vals=[...actualVals,...trendVals,...projection.map(x=>x.value)];
+  let min=Math.min(...vals),max=Math.max(...vals),pad=(max-min||1)*.12; min-=pad;max+=pad;
+  const xDateStart=dateObj(data[0].date),xDateEnd=dateObj(projection.length?projection.at(-1).date:data.at(-1).date),totalSpan=Math.max(1,xDateEnd-xDateStart);
+  const xDate=d=>p.l+((dateObj(d)-xDateStart)/totalSpan)*iw; const y=v=>p.t+(max-v)*ih/(max-min);
+  let grid=""; for(let i=0;i<5;i++){const yy=p.t+ih*i/4,vv=max-(max-min)*i/4;grid+=`<line x1="${p.l}" x2="${W-p.r}" y1="${yy}" y2="${yy}" stroke="#e6e9ef"/><text x="${p.l-8}" y="${yy+4}" text-anchor="end" font-size="11" fill="#667085">${fmt(vv,metric==="fat"?1:2)}</text>`}
+  const linePath=(arr,getter)=>!arr.length?"":arr.map((r,i)=>`${i?"L":"M"}${xDate(r.date).toFixed(1)},${y(getter(r)).toFixed(1)}`).join(" ");
+  const trendPath=linePath(trendSeries,r=>r.trend),projPath=projection.length?linePath(projection,r=>r.value):"";
+  const stems=daily.map(r=>{const cx=xDate(r.date),cy=y(r.calc),ty=y(r.trend);return `<line x1="${cx}" x2="${cx}" y1="${cy}" y2="${ty}" stroke="#CBD5E1" stroke-width="1.2" opacity="${r.estimated?.35:0.8}"/>`;}).join("");
+  const actualPath=linePath(daily,r=>r.calc);
+  const showMarks=days===30 || days===60;
+  const marks=showMarks?daily.map(r=>{const cx=xDate(r.date),cy=y(r.calc),stroke=r.estimated?"#94A3B8":"#111827",fill=r.estimated?"#fff":"#111827",opacity=r.estimated?.65:1;return `<circle class="chartMark" cx="${cx}" cy="${cy}" r="${r.estimated?3.2:3.8}" fill="${fill}" stroke="${stroke}" stroke-width="1.2" opacity="${opacity}"/>`}).join(""):"";
+  const hits=daily.map(r=>{const cx=xDate(r.date),cy=y(r.calc);return `<circle class="chartHit" cx="${cx}" cy="${cy}" r="14" fill="transparent" data-date="${r.date}"/>`}).join("");
+  const tickCount=Math.min(6,Math.max(2,Math.floor((xDateEnd-xDateStart)/(1000*60*60*24*5))+1));
+  const tickDates=[]; for(let i=0;i<tickCount;i++){const ratio=i/(tickCount-1),dt=new Date(xDateStart.getTime()+ratio*(xDateEnd-xDateStart));const key=dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0");tickDates.push(key);}
+  const dateTicks=tickDates.map(d=>{const x=xDate(d);return `<line x1="${x}" x2="${x}" y1="${H-p.b}" y2="${H-p.b+5}" stroke="#cbd0d6"/><text x="${x}" y="${H-5}" text-anchor="middle" font-size="11" fill="#667085">${formatShortDate(d)}</text>`}).join("");
+  svg.innerHTML=grid+`<path d="${actualPath}" fill="none" stroke="#94A3B8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>`+`<path d="${trendPath}" fill="none" stroke="#B42318" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`+stems+marks+(projection.length?`<path d="${projPath}" fill="none" stroke="#94A3B8" stroke-width="2" stroke-dasharray="3 5" stroke-linecap="round" stroke-linejoin="round"/>`:"")+`<line id="chartGuide" class="chartGuide" x1="0" x2="0" y1="${p.t}" y2="${H-p.b}" stroke="#667085" stroke-width="1.2" stroke-dasharray="3 3" opacity="0"/><circle id="chartSelected" class="chartSelected" cx="0" cy="0" r="6" fill="#fff" stroke="#111827" stroke-width="2" opacity="0"/>`+dateTicks+hits;
+  svg.innerHTML+=`<rect class="chartHoverZone" x="${p.l}" y="${p.t}" width="${iw}" height="${ih}" aria-label="Chart interaction area"/>`;
+  $("legend").innerHTML=`<span>● ${name} Actual</span><span style="color:#8b95a1">○ Estimated</span><span style="color:#B42318">━ ${name} Trend</span><span style="color:#667085">┈ Projected ${name}</span>`;
+
+  const formatDate=d=>new Intl.DateTimeFormat(undefined,{weekday:"short",month:"short",day:"numeric",year:"numeric"}).format(dateObj(d));
+  const guide=$("chartGuide"), selected=$("chartSelected");
+  const showTooltip=(r,evt,lock=false)=>{
+    const x=daily.find(v=>v.date===r.date)||r;
+    const trend=x.trend,actual=x.calc, label=x.estimated?"Estimated":"Actual";
+    tooltip.innerHTML=`<div class="ttDate">${formatDate(r.date)}</div><div class="ttTrend">${name} Trend: <b>${fmt(trend,metric==="fat"?1:2)} ${unit}</b></div><div class="ttActual">${label}: <b>${fmt(actual,metric==="fat"?1:2)} ${unit}</b></div>`;
+    const cx=xDate(r.date),cy=y(r.calc); guide.setAttribute("x1",cx);guide.setAttribute("x2",cx);guide.setAttribute("opacity","1");selected.setAttribute("cx",cx);selected.setAttribute("cy",cy);selected.setAttribute("opacity","1");
+    const chartRect=svg.parentElement.getBoundingClientRect(); let left=evt.clientX-chartRect.left+10,top=evt.clientY-chartRect.top-78;
+    left=Math.max(6,Math.min(left,chartRect.width-216));top=Math.max(6,Math.min(top,chartRect.height-76));tooltip.style.left=left+"px";tooltip.style.top=top+"px";tooltip.style.display="block";
+    if(lock) svg.dataset.locked="1";
+  };
+  const nearestAtClientX=(clientX)=>{const rect=svg.getBoundingClientRect();const localX=(clientX-rect.left)*(W/rect.width);let best=daily[0],bestDist=Infinity;daily.forEach(r=>{const dist=Math.abs(xDate(r.date)-localX);if(dist<bestDist){bestDist=dist;best=r;}});return best;};
+  svg.querySelectorAll('.chartHit').forEach(hit=>{const r=daily.find(x=>x.date===hit.dataset.date);if(!r)return;hit.addEventListener('mouseenter',e=>showTooltip(r,e));hit.addEventListener('mousemove',e=>showTooltip(r,e));hit.addEventListener('mouseleave',()=>{if(!window.matchMedia('(pointer:coarse)').matches&&!svg.dataset.locked){tooltip.style.display='none';guide.setAttribute("opacity","0");selected.setAttribute("opacity","0")}});hit.addEventListener('click',e=>showTooltip(r,e,true));});
+  svg.querySelector('.chartHoverZone').addEventListener('pointermove',e=>{if(window.matchMedia('(pointer:coarse)').matches)return;const r=nearestAtClientX(e.clientX);if(r)showTooltip(r,e,false);});
+  svg.querySelector('.chartHoverZone').addEventListener('pointerleave',()=>{if(!svg.dataset.locked){tooltip.style.display='none';guide.setAttribute("opacity","0");selected.setAttribute("opacity","0")}});
+  svg.querySelector('.chartHoverZone').addEventListener('click',e=>{const r=nearestAtClientX(e.clientX);if(r)showTooltip(r,e,true);});
+  svg.addEventListener('click',e=>{if(e.target===svg){svg.dataset.locked="0";tooltip.style.display='none';guide.setAttribute("opacity","0");selected.setAttribute("opacity","0")}});
+}
+
+function openMeasurementModal(mode="add",dateValue=""){
+  $("measurementModal").classList.remove("hidden");
+  $("measurementTitle").textContent=mode==="edit"?"Edit measurement":"Add measurement";
+  $("save").textContent=mode==="edit"?"Update measurement":"Add measurement";
+  $("date").disabled=mode==="edit";
+  if(mode==="add"){
+    editing=null;
+    $("date").value=dateValue||new Date().toISOString().slice(0,10);
+    ["weight","fat","muscle"].forEach(id=>$(id).value="");
+  }
+}
+function closeMeasurementModal(){
+  $("measurementModal").classList.add("hidden");
+  editing=null;
+  $("date").disabled=false;
+  ["weight","fat","muscle"].forEach(id=>$(id).value="");
+  $("save").textContent="Add measurement";
+}
+function clearForm(){closeMeasurementModal()}
+$("addMeasurementBtn").onclick=()=>openMeasurementModal("add");
+$("closeMeasurement").onclick=closeMeasurementModal;
+$("measurementBackdrop").onclick=closeMeasurementModal;
+$("save").onclick=()=>{
+  const d=$("date").value;if(!d){alert("Choose a date.");return}
+  const obj={date:d,weight:num($("weight").value),fat:num($("fat").value),muscle:num($("muscle").value)};
+  if(obj.weight==null&&obj.fat==null&&obj.muscle==null){alert("Enter at least one metric.");return}
+  if(editing){rows=rows.filter(r=>r.date!==editing);rows.push(obj)}else{rows=rows.filter(r=>r.date!==d);rows.push(obj)}
+  rows.sort((a,b)=>a.date.localeCompare(b.date));saveStore();closeMeasurementModal();render();
+};
+$("cancel").onclick=closeMeasurementModal;
+window.editRow=d=>{
+  const r=rows.find(x=>x.date===d);if(!r)return;
+  editing=d;
+  $("date").value=r.date;
+  $("date").disabled=true;
+  $("weight").value=r.weight??"";$("fat").value=r.fat??"";$("muscle").value=r.muscle??"";
+  $("measurementModal").classList.remove("hidden");
+  $("measurementTitle").textContent="Edit measurement";
+  $("save").textContent="Update measurement";
+};
+window.deleteRow=d=>{if(confirm("Delete measurement for "+d+"?")){rows=rows.filter(r=>r.date!==d);saveStore();render()}};
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");metric=b.dataset.metric;renderChart()});
+document.querySelectorAll(".range").forEach(b=>b.onclick=()=>{document.querySelectorAll(".range").forEach(x=>x.classList.remove("active"));b.classList.add("active");days=b.dataset.days==="all"?"all":Number(b.dataset.days);renderChart()});
+
+function formatCsvDate(d){
+  const [y,m,day]=String(d).split("-");
+  return `${day}-${m}-${y}`;
+}
+function parseCsvDate(value){
+  const v=String(value||"").trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(v))return v;
+  const m=v.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+  if(m)return `${m[3]}-${m[2]}-${m[1]}`;
+  return "";
+}
+$("export").onclick=()=>{
+ const all=[...rows].sort((a,b)=>a.date.localeCompare(b.date));
+ const head="Date,Weight Actual,Body Fat Actual,Skeletal Muscle Actual\n";
+ const body=all.map(r=>[formatCsvDate(r.date),r.weight??"",r.fat??"",r.muscle??""].join(",")).join("\n");
+ const blob=new Blob([head+body],{type:"text/csv"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="saring-v1.0.0.csv";a.click();URL.revokeObjectURL(a.href)
+};
+$("import").onchange=e=>{
+ const f=e.target.files[0];if(!f)return;const reader=new FileReader();
+ reader.onload=()=>{
+   const lines=String(reader.result).trim().split(/\r?\n/);if(lines.length<2)return;
+   const headers=lines[0].split(",").map(x=>x.trim().toLowerCase());
+   const idx=(...names)=>{for(const n of names){const i=headers.indexOf(n);if(i>=0)return i}return -1};
+   const di=idx("date"), wi=idx("weight actual","weight","weight (kg)"), fi=idx("body fat actual","body fat","body fat (%)","fat"), mi=idx("skeletal muscle actual","skeletal muscle","skeletal muscle (kg)","muscle");
+   const parsed=lines.slice(1).map(line=>{
+      const c=line.split(",");
+      return {date:di>=0?parseCsvDate(c[di]):"",weight:wi>=0?num(c[wi]):null,fat:fi>=0?num(c[fi]):null,muscle:mi>=0?num(c[mi]):null}
+   }).filter(r=>r.date && (r.weight!=null||r.fat!=null||r.muscle!=null));
+   rows=parsed;rows.sort((a,b)=>a.date.localeCompare(b.date));saveStore();render();e.target.value="";
+ };reader.readAsText(f)
+};
+function render(){
+  // If an old Start date would hide every saved measurement, recover by showing earlier data.
+  if(rows.length && settings.startDate && !settings.showEarlier && !rows.some(r=>r.date>=settings.startDate)){
+    settings.showEarlier=true;
+    saveSettings();
+  }
+  renderStats();
+  renderTable();
+  renderChart();
+  renderSettings();
+}
+function renderSettings(){
+  $("startDate").value=settings.startDate||"";
+  $("goalWeight").value=settings.goalWeight??"";
+  $("plannedRate").value=String(settings.plannedRate??0.5);
+  $("calorieToggle").textContent=settings.showCalories?"On":"Off";
+  $("calorieToggle").classList.toggle("primary",!!settings.showCalories);
+  $("showEarlier").classList.toggle("primary",settings.showEarlier);
+  $("hideEarlier").classList.toggle("primary",!settings.showEarlier);
+}
+$("startDate").onchange=e=>{
+  settings.startDate=e.target.value||"";
+  saveSettings();render();
+};
+$("goalWeight").onchange=e=>{
+  const v=num(e.target.value);
+  settings.goalWeight=v;
+  saveSettings();render();
+};
+$("plannedRate").onchange=e=>{
+  const v=num(e.target.value);
+  settings.plannedRate=v&&v>0?v:0.5;
+  saveSettings();render();
+};
+$("calorieToggle").onclick=()=>{
+  settings.showCalories=!settings.showCalories;
+  saveSettings();renderSettings();render();
+};
+$("showEarlier").onclick=()=>{settings.showEarlier=true;saveSettings();renderSettings();render()};
+$("hideEarlier").onclick=()=>{settings.showEarlier=false;saveSettings();renderSettings();render()};
+
+$("date").value=new Date().toISOString().slice(0,10);renderSettings();render();
+</script>
+</body>
+</html>
