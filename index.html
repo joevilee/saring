@@ -3,7 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SARING v1.0.0</title>
+<meta name="theme-color" content="#2563eb">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SARING">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.svg" type="image/svg+xml">
+<title>SARING v1.0.1</title>
 <style>
 :root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e6e9ef;--accent:#2563eb;--danger:#dc2626;--shadow:0 6px 22px rgba(16,24,40,.06)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text)}
@@ -27,7 +33,7 @@
 .changeTop{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .changeRate{font-size:14px;font-weight:800;white-space:nowrap}.changeLabel{text-transform:none}.rateSentenceWrap{margin-top:5px;line-height:1.4}.rateSentence{font-size:14px;font-weight:600}.rateSentence.good{color:#176b3a}.rateSentence.bad{color:#b42318}.rateSentence.neutral{color:#475569}
 .addActions .btn{white-space:nowrap}
-.measurementModal .modalCard{height:auto;max-height:90dvh}.measurementModal .form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.measurementModal .actions{grid-column:1/-1;justify-content:flex-end}.changeCard{margin-top:12px}.changeGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}.changeItem{padding:12px;border:1px solid var(--line);border-radius:10px;background:#fafbfc}.rateDown{color:#176b3a}.rateUp{color:#b42318}.rateNeutral{color:#475569}.goalSchedule{font-size:12px;font-weight:700;margin-top:10px}.goalSchedule.good{color:#176b3a}.goalSchedule.bad{color:#b42318}.goalSchedule.neutral{color:#475569}.calorieEstimate{font-size:11px;color:#667085;margin-top:5px}.calorieAdjustment{font-size:11px;color:#667085;margin-top:4px}.setting select{width:100%;box-sizing:border-box;padding:11px;border:1px solid #d7dce5;border-radius:10px;font-size:14px;background:#fff}.settingToggle{display:flex;align-items:center;gap:8px}.settingToggle .btn{min-width:64px}
+.measurementModal .modalCard{height:auto;max-height:90dvh}.measurementModal .form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.measurementModal .actions{grid-column:1/-1;justify-content:flex-end}.changeCard{margin-top:12px}.changeGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}.changeItem{padding:12px;border:1px solid var(--line);border-radius:10px;background:#fafbfc}.rateDown{color:#176b3a}.rateUp{color:#b42318}.rateNeutral{color:#475569}.goalSchedule{font-size:12px;font-weight:700;margin-top:10px}.goalSchedule.good{color:#176b3a}.goalSchedule.bad{color:#b42318}.goalSchedule.neutral{color:#475569}.calorieEstimate{font-size:11px;color:#667085;margin-top:5px}.setting select{width:100%;box-sizing:border-box;padding:11px;border:1px solid #d7dce5;border-radius:10px;font-size:14px;background:#fff}.settingToggle{display:flex;align-items:center;gap:8px}.settingToggle .btn{min-width:64px}
 @media(max-width:800px){
   .addActions{width:100%;justify-content:flex-start;align-items:stretch}
   .addActions .btn,.addActions label.btn{height:40px;padding:8px 10px;font-size:11px}
@@ -188,7 +194,7 @@
   </div>
 
   <div class="appFooter">
-    SARING <span>v1.0.0</span><br>
+    SARING <span>v1.0.1</span><br>
     Personal body composition tracker.
   </div>
 </div>
@@ -368,29 +374,6 @@ function renderStats(){
     return `<div class="calorieEstimate">Estimated calorie ${kind}: ~${Math.round(kcalDay/5)*5} kcal/day</div>`;
   };
 
-  // Match TrendWeight's planned-vs-actual calorie adjustment.
-  // Planned/actual weight-change rates are converted using 2.20462262 lb/kg × 3500 cal/lb.
-  const calorieAdjustment=(actualRate,plannedRate,lossDirection)=>{
-    if(actualRate==null||plannedRate==null||plannedRate<=0)return "";
-    const plannedSigned=lossDirection?-plannedRate:plannedRate;
-    const actualCaloriesPerDay=actualRate*2.20462262*3500/7;
-    const plannedCaloriesPerDay=plannedSigned*2.20462262*3500/7;
-    const diff=actualCaloriesPerDay-plannedCaloriesPerDay;
-    const rounded=Math.round(Math.abs(diff));
-    if(rounded<1){
-      const verb=lossDirection?`lose ${fmt(plannedRate,1)} kg/week`:`gain ${fmt(plannedRate,1)} kg/week`;
-      return `<div class="calorieAdjustment">You are on track to ${verb}.</div>`;
-    }
-    if(lossDirection){
-      return diff>0
-        ? `<div class="calorieAdjustment">You must cut <strong>${rounded} cal/day</strong> to lose ${fmt(plannedRate,1)} kg/week.</div>`
-        : `<div class="calorieAdjustment">You can eat <strong>${rounded} cal/day</strong> more and still lose ${fmt(plannedRate,1)} kg/week.</div>`;
-    }
-    return diff<0
-      ? `<div class="calorieAdjustment">You must eat <strong>${rounded} cal/day</strong> more to gain ${fmt(plannedRate,1)} kg/week.</div>`
-      : `<div class="calorieAdjustment">You can eat <strong>${rounded} cal/day</strong> less and still gain ${fmt(plannedRate,1)} kg/week.</div>`;
-  };
-
   const rateSentence=(m,rate)=>{
     if(rate==null)return `<span class="rateSentence neutral">Not enough data for a weekly rate.</span>`;
     const abs=Math.abs(rate).toFixed(m.dec);
@@ -482,8 +465,6 @@ function renderStats(){
         const kind=actualRate<0?"deficit":"surplus";
         calorieHtml=`<span>Estimated calorie ${kind}: ~${Math.round(kcalDay/5)*5} kcal/day</span>`;
       }
-      const adjustmentHtml=calorieAdjustment(actualRate,rate,lossDirection);
-      if(adjustmentHtml)calorieHtml+=adjustmentHtml;
     }
     $("goalSummary").innerHTML=summary+scheduleHtml;
     $("goalFill").style.width=(done*100).toFixed(1)+"%";
@@ -691,7 +672,7 @@ $("export").onclick=()=>{
  const all=[...rows].sort((a,b)=>a.date.localeCompare(b.date));
  const head="Date,Weight Actual,Body Fat Actual,Skeletal Muscle Actual\n";
  const body=all.map(r=>[formatCsvDate(r.date),r.weight??"",r.fat??"",r.muscle??""].join(",")).join("\n");
- const blob=new Blob([head+body],{type:"text/csv"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="saring-v1.0.0.csv";a.click();URL.revokeObjectURL(a.href)
+ const blob=new Blob([head+body],{type:"text/csv"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`saring-v1.0.1-${new Date().toISOString().slice(0,10)}.csv`;a.click();URL.revokeObjectURL(a.href)
 };
 $("import").onchange=e=>{
  const f=e.target.files[0];if(!f)return;const reader=new FileReader();
@@ -749,6 +730,9 @@ $("showEarlier").onclick=()=>{settings.showEarlier=true;saveSettings();renderSet
 $("hideEarlier").onclick=()=>{settings.showEarlier=false;saveSettings();renderSettings();render()};
 
 $("date").value=new Date().toISOString().slice(0,10);renderSettings();render();
+</script>
+<script>
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js",{scope:"./"}).catch(()=>{}));}
 </script>
 </body>
 </html>
